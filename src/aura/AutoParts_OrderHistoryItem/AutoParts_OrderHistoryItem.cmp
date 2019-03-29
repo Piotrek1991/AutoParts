@@ -1,0 +1,70 @@
+<!--
+ - Created by BRITENET on 27.03.2019.
+ -->
+
+<aura:component description="AutoParts_OrderHistoryItem" implements="forceCommunity:availableForAllPageTypes"
+                access="global" controller="AutoParts_OrderHistory">
+    <aura:attribute name="oneOrder" type="String"/>
+    <aura:attribute name="orderItemList" type="List"/>
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+
+    <div class="slds-feed slds-size--1-of-1 slds-m-bottom--large">
+        <ul class="slds-feed__list">
+            <div class="slds-box">
+                <div class="slds-m-bottom--medium slds-p-left--small headerBox">
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_2-of-6">
+                            <div class="slds-m-right--large">
+                                Purchase's number: {!v.oneOrder.OrderNumber}
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size_2-of-6">
+                            Date of purchase: {!v.oneOrder.EffectiveDate}
+                        </div>
+                        <div class="slds-col slds-size_2-of-6">
+                            <div style="text-align: right;" class="slds-m-right--large">
+                                Status: {!v.oneOrder.Status}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <aura:iteration items="{!v.orderItemList}" var="oneOrderItem">
+                    <div class="slds-m-around--small">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_4-of-6">
+                                <a href="{! $Site.siteUrlPrefix + '/detail/' + oneOrderItem.Product2Id}">
+                                        {!oneOrderItem.Product2.Name}
+                                </a>
+                            </div>
+                            <div class="slds-col slds-size_1-of-6">
+                            {!oneOrderItem.Quantity} item
+                            </div>
+                            <div class="slds-col slds-size_1-of-6">
+                                <lightning:formattedNumber value="{!oneOrderItem.UnitPrice}"
+                                                           style="currency"
+                                                           minimumFractionDigits="2"
+                                                           maximumFractionDigits="2"/>
+                            </div>
+                        </div>
+
+                    </div>
+                </aura:iteration>
+                <div class="orderSummaryFont slds-m-around--medium">
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_4-of-6">
+                        </div>
+                        <div class="slds-col slds-size_2-of-6" style="text-align: left">
+                            Total:
+                            <lightning:formattedNumber value="{!v.oneOrder.TotalAmount}"
+                                                       style="currency"
+                                                       minimumFractionDigits="2"
+                                                       maximumFractionDigits="2"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </ul>
+    </div>
+
+</aura:component>
