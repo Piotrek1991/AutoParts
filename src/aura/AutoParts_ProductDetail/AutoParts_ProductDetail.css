@@ -1,0 +1,43 @@
+.THIS.imageView {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    width: 450px;
+    height: 450px;
+    margin: 2px;
+    display: inline-block;
+}
+
+.THIS .title {
+    display: inline-block;
+    width: 450px;
+    height: 450px;
+    padding: 1px !important;
+}
+.THIS .slds-carousel__content {
+    display: none;
+}
+
+.THIS.nameProduct {
+    margin-left: 10px;
+    margin-bottom: 10px;
+    font-size: 170%;
+    color: black;
+    text-align: left;
+}
+
+.THIS .smallLabel {
+     font-weight: bold;
+     display: inline;
+     font-size: 120%;
+ }
+
+.THIS .textDisplay {
+    font-size: 120%;
+}
+
+
+.THIS .slds-carousel__indicator-action.slds-is-active{
+    background-color: #65ba00;
+    border-color: #65ba00;
+}
