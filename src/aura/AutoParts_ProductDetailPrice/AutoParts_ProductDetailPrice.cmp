@@ -14,16 +14,39 @@
     <aura:handler name="init" value="{!this}" action="{!c.init}"/>
 
     <div class="rightColumnWrap">
-        <div class="discountInfo" style="text-align: center;">Limit offer</div>
-
-        Price:
+        <aura:if isTrue="{!v.discountPrice lt v.standardPrice}">
+            <div class="discountInfo" style="text-align: center;">{!$Label.c.Limit_offer}</div>
+        </aura:if>
+            {!$Label.c.Price}:
         <div>
-            <s class="standardPrice">
-                <lightning:formattedNumber value="{!v.standardPrice}"
-                                           style="currency"
-                                           minimumFractionDigits="2"
-                                           maximumFractionDigits="2"/>
-            </s>
+            <aura:if isTrue="{!v.discountPrice == v.standardPrice}">
+                <div>
+                    <p class="standardPriceWithOut">
+                        <lightning:formattedNumber value="{!v.standardPrice}"
+                                                   style="currency"
+                                                   minimumFractionDigits="2"
+                                                   maximumFractionDigits="2"/>
+                    </p>
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.discountPrice lt v.standardPrice}">
+                <div>
+                    <s class="standardPrice">
+                        <lightning:formattedNumber value="{!v.standardPrice}"
+                                                   style="currency"
+                                                   minimumFractionDigits="2"
+                                                   maximumFractionDigits="2"/>
+                    </s>
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.discountPrice lt v.standardPrice}">
+                <div class="standardPriceWithOut">
+                    <lightning:formattedNumber value="{!v.discountPrice}"
+                                               style="currency"
+                                               minimumFractionDigits="2"
+                                               maximumFractionDigits="2"/>
+                </div>
+            </aura:if>
         </div>
         <div class="priceWrap">
             <span class="priceLabel"><lightning:formattedNumber value="{!v.discountPrice  * v.amountProduct}"
@@ -37,21 +60,23 @@
                 -
             </lightning:button>
             <div class="buttonNumber slds-m-top--medium ">
-            <lightning:input label="" variant="label-hidden"
-                    type="number" min="0" max="100"
-                             aura:id="searchForm"
-                             class="buttonNumber1"
-                             name="expenseName"
-                             value="{!v.amountProduct}"
-            /></div>
+                <lightning:input label="" variant="label-hidden"
+                                 type="number" min="0" max="100"
+                                 aura:id="searchForm"
+                                 class="buttonNumber1"
+                                 name="expenseName"
+                                 value="{!v.amountProduct}"
+                />
+            </div>
             <lightning:button class="buttonUp" onclick="{!c.clickButtonUp}">
                 +
             </lightning:button>
         </div>
         <div style="text-align: center;">
-            <lightning:button class="addToCardButton" onclick="{!c.clickAddToBasket}" title="Add to Cart">
-                Add to cart
+            <lightning:button class="addToCardButton" onclick="{!c.clickAddToBasket}" title="{!$Label.c.Add_to_cart}">
+                    {!$Label.c.Add_to_cart}
             </lightning:button>
         </div>
     </div>
+    <c:AutoParts_ShowToast aura:id="toast"/>
 </aura:component>
