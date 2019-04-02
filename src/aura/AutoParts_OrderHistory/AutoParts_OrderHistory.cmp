@@ -1,0 +1,14 @@
+<!--
+ - Created by BRITENET on 26.03.2019.
+ -->
+
+<aura:component description="AutoParts_OrderHistory" implements="forceCommunity:availableForAllPageTypes" access="global" controller="AutoParts_OrderHistory">
+    <aura:attribute name="orderList" type="List"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+
+    <aura:iteration items="{!v.orderList}" var="oneOrder" indexVar="ind">
+        <c:AutoParts_OrderHistoryItem oneOrder="{!oneOrder}"/>
+    </aura:iteration>
+    <c:AutoParts_ShowToast aura:id="toast"/>
+</aura:component>
