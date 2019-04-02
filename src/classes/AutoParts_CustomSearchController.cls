@@ -7,6 +7,7 @@ public class AutoParts_CustomSearchController {
     @AuraEnabled
     public static List<String> searchForIds(String query, List<String> category) {
         List<Product2> resultsProducts = new List<Product2>();
+
         String newSearchText = '' + query + '%';
         if (!category.isEmpty()) {
             resultsProducts = [SELECT Id FROM Product2 WHERE Name LIKE :newSearchText AND Family IN :category AND IsActive = true];
@@ -18,12 +19,13 @@ public class AutoParts_CustomSearchController {
         for (Product2 product : resultsProducts) {
             ids.add(product.Id);
         }
+        System.debug('ids  ' + ids);
         return ids;
     }
 
     @AuraEnabled
     public static List<PricebookEntry> searchForProductPrice(String productId) {
-        String queryDataBase = 'SELECT Id, Name, Product2Id, UnitPrice FROM PricebookEntry WHERE Product2Id = \'' + productId + '\' ORDER BY UnitPrice';
+        String queryDataBase = 'SELECT Id, Name, Discount_Price__c, Product2Id, UnitPrice, Product2.Name, Pricebook2Id FROM PricebookEntry WHERE Pricebook2.Is_Active_Discount__c = true AND Product2Id = \'' + productId + '\' ORDER BY Discount_Price__c';
         List<PricebookEntry> resultsProducts = Database.query(queryDataBase);
         System.debug('resultsProducts' + resultsProducts);
         return resultsProducts;
@@ -55,11 +57,11 @@ public class AutoParts_CustomSearchController {
     public static List<String> selectByPriceLow(List<String> ids) {
         List<String> result = new List<String>();
         List<AggregateResult> pricebookEntries = [
-                SELECT MIN(UnitPrice) unitPr, Product2Id
+                SELECT MIN(Discount_Price__c) unitPr, Product2Id
                 FROM PricebookEntry
-                WHERE Product2Id IN :ids
+                WHERE Product2Id IN :ids AND Pricebook2.Is_Active_Discount__c = true
                 GROUP BY Product2Id
-                ORDER BY MIN(UnitPrice) ASC NULLS LAST
+                ORDER BY MIN(Discount_Price__c) ASC NULLS LAST
         ];
         for (AggregateResult pricebookEntry : pricebookEntries) {
             String tempId = (String) pricebookEntry.get('Product2Id');
@@ -72,11 +74,11 @@ public class AutoParts_CustomSearchController {
     public static List<String> selectByPriceHigh(List<String> ids) {
         List<String> result = new List<String>();
         List<AggregateResult> pricebookEntries = [
-                SELECT MIN(UnitPrice) unitPr, Product2Id
+                SELECT MIN(Discount_Price__c) unitPr, Product2Id
                 FROM PricebookEntry
-                WHERE Product2Id IN :ids
+                WHERE Product2Id IN :ids AND Pricebook2.Is_Active_Discount__c = true
                 GROUP BY Product2Id
-                ORDER BY MIN(UnitPrice) DESC NULLS LAST
+                ORDER BY MIN(Discount_Price__c) DESC NULLS LAST
         ];
         for (AggregateResult pricebookEntry : pricebookEntries) {
             String tempId = (String) pricebookEntry.get('Product2Id');
@@ -117,6 +119,7 @@ public class AutoParts_CustomSearchController {
     @AuraEnabled
     public static List<String> selectProductWithFilters(List<String> recordsId, List<String> selectedCheckBoxes, String currentSortOrder,
             Integer minPrice, Integer maxPrice, String currentQuery) {
+        System.debug('recordsId ' + recordsId);
 
         System.debug('minPrice' + minPrice);
         System.debug('maxPrice' + maxPrice);
@@ -139,7 +142,7 @@ public class AutoParts_CustomSearchController {
                 WHERE Product2Id IN :productsIds
                 AND UnitPrice >= :minPriceToQuery
                 AND UnitPrice <= :maxPriceToQuery
-                AND Pricebook2Id = '01s1t000003wsOrAAI'
+                AND Pricebook2.Is_Active_Discount__c = true
                 ORDER BY Name DESC
         ];
 
@@ -149,6 +152,8 @@ public class AutoParts_CustomSearchController {
             result.add(tempId);
         }
         List<String> productsAfterSort = selectBySortOrder(result, currentSortOrder);
+
+        System.debug('productsAfterSort ' + productsAfterSort);
 
         return productsAfterSort;
     }

@@ -1,0 +1,141 @@
+ .THIS.productBox {
+       display: inline-block;
+       width: 250px;
+       height: 450px;
+       padding: 1px !important;
+       text-align: center;
+       border-bottom: 1px solid;
+       border-style: solid;
+       border-color: white;
+       border-width: 1px;
+   }
+ .THIS.productBox:hover {
+       border-style: solid;
+       border-width: 1px;
+       border-color: black;
+   }
+
+ .THIS.productBox1 {
+       display: inline-block;
+       width: 400px;
+       height: 400px;
+       padding: 1px !important;
+       border-style: solid;
+       border-width: 1px;
+       text-align: center;
+   }
+
+ .THIS.title {
+    display: inline-block;
+    width: 240px;
+    height: 240px;
+}
+
+ .THIS .innerTitle {
+     background-size: cover;
+     background-position: center;
+     background-repeat: no-repeat;
+     width: 100%;
+     height: 244px;
+ }
+
+ .THIS .nameProduct {
+     margin-left: 10px;
+     margin-bottom: 10px;
+     font-size: 150%;
+     color: black;
+     text-align: left;
+ }
+
+ .THIS .priceProduct {
+     margin-left: 10px;
+     margin-right: 10px;
+     font-weight: bold;
+     font-size: 170%;
+     color: #ef2c35;
+     text-align: left;
+     border-bottom: 1px solid black;
+ }
+
+ .THIS .showDetailsButton {
+     border: 1px solid #e5e5e5;
+     background: #f4f4f4;
+     border-radius: 4px;
+     text-transform: uppercase;
+     text-decoration: none;
+     color: #333;
+     font-weight: 700;
+     padding: 15px 10px;
+     width: calc(100% - 40px);
+     min-height: 88px;
+     text-align: center;
+   }
+
+ .THIS .addBasketButton {
+     border: 1px solid #e5e5e5;
+     display: inline-block;
+     background: #65ba00;
+     border-radius: 4px;
+     text-transform: uppercase;
+     text-decoration: none;
+     color: #333;
+     font-weight: 700;
+     padding: 12px 10px !important;
+     width: 110px !important;
+     min-height: 48px !important;
+     text-align: center;
+   }
+
+ .THIS .standardPriceWithOut {
+     margin-top: 37px;
+     margin-right: 10px;
+     font-size: 100%;
+     color: #616161;
+     text-align: left;
+   }
+
+ .THIS .standardPrice {
+     margin-right: 10px;
+     font-size: 80%;
+     color: #616161;
+     text-align: left;
+   }
+
+ .THIS .mainLabel {
+     font-size: 170%;
+     text-align: center;
+   }
+
+ .THIS .continueShoppingLabel {
+     font-size: 170%;
+     bottom: 10px;
+     color: green;
+   }
+
+ .THIS .labelDiscount {
+    position: absolute;
+    font-family: arial;
+    font-size: 0.7em;
+    font-weight: normal;
+    line-height: 18px;
+    margin-right: 2px;
+    padding: 0 6px;
+    text-transform: uppercase;
+    color: #fff;
+    background: #65ba00;
+   }
+
+ .THIS .goToBasket {
+    border: 1px solid #e5e5e5;
+    display: inline-block;
+    background: #65ba00;
+    border-radius: 4px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #333;
+    font-weight: 700;
+    padding: 4px 4px !important;
+    width: 110px !important;
+    min-height: 48px !important;
+    text-align: center;
+   }
