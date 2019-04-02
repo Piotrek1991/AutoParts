@@ -1,0 +1,96 @@
+<!--
+ - Created by BRITENET on 22.03.2019.
+ -->
+
+<aura:component description="AutoParts_Basket" implements="forceCommunity:availableForAllPageTypes" access="global"
+                controller="AutoParts_Basket">
+    <aura:attribute name="totalItemInBasket" type="Integer" default="0"/>
+    <aura:attribute name="totalAmount" type="Integer" default="0"/>
+    <aura:attribute name="order" type="Order"/>
+    <aura:attribute name="showBasket" type="Boolean" default="false"/>
+    <aura:attribute name="displaySmallBasket" type="Boolean" default="true"/>
+    <aura:attribute name="showModal" type="Boolean" default="true"/>
+    <aura:attribute name="orderItemList" type="List"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler event="c:AutoParts_AddProductToBasket" action="{!c.handleAddToBasket}"/>
+    <aura:handler event="c:AutoParts_DeleteBasket" action="{!c.handleDeleteBasket}"/>
+
+    <aura:registerEvent name="AutoParts_RefreshBasketDetails" type="c:AutoParts_RefreshBasketDetails"/>
+
+    <div id="cart" class="basketPosition" onclick="{!c.clickShowModalBasket}">
+        <div class="slds-media__figure slds-m-right--large">
+            <aura:if isTrue="{!v.displaySmallBasket}">
+                <div class="hoverBasket">
+                    <div class="slds-media__figure slds-m-right--large">
+                        <lightning:icon iconName="utility:cart" size="large"/>
+                    </div>
+                    <div class="slds-media__body slds-m-bottom--x-small">
+                        <aura:if isTrue="{!v.order.TotalAmount lt 1 || v.order.TotalAmount == null}">
+                                {!$Label.c.Your_basket_is_empty}
+                        </aura:if>
+                        <aura:if isTrue="{!v.order.TotalAmount gt 0}">
+                        {!v.order.OrderItem__c}&nbsp;{!$Label.c.item}&nbsp;&nbsp;
+                            <div class="currencyLabel">
+                                <lightning:formattedNumber value="{!v.order.TotalAmount}"
+                                                           style="currency"
+                                                           minimumFractionDigits="2"
+                                                           maximumFractionDigits="2"/>
+                            </div>
+                        </aura:if>
+                    </div>
+                </div>
+            </aura:if>
+        </div>
+        <aura:if isTrue="{!!v.displaySmallBasket}">
+            <div class="slds-m-bottom--medium slds-p-around--medium headerBox">
+                <div class="slds-grid">
+                    <div class="slds-col slds-size_1-of-1">
+                        <div class="slds-m-right--large" style="font-size: 130%;font-weight: bold; text-align: center;">
+                        {!$Label.c.Total_Amount}:
+                            <lightning:formattedNumber value="{!v.order.TotalAmount}"
+                                                       style="currency"
+                                                       minimumFractionDigits="2"
+                                                       maximumFractionDigits="2"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-m-around--medium">
+                <aura:iteration var="onePosition" items="{!v.orderItemList}">
+                    <div style="font-size: 110%;font-weight: bold;">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_2-of-4">
+                                <a href="{! $Site.siteUrlPrefix + '/detail/' + onePosition.Product2Id}">
+                                        {!onePosition.Product2.Name}
+                                </a>
+                            </div>
+                            <div style="text-align: center;" class="slds-col slds-size_1-of-4">
+                            {!onePosition.Quantity} x
+                                <lightning:formattedNumber value="{!onePosition.UnitPrice}"
+                                                           style="currency"
+                                                           minimumFractionDigits="2"
+                                                           maximumFractionDigits="2"/>
+                            </div>
+                            <div class="slds-col slds-size_1-of-4">
+                                =
+                                <lightning:formattedNumber value="{!onePosition.TotalPrice}"
+                                                           style="currency"
+                                                           minimumFractionDigits="2"
+                                                           maximumFractionDigits="2"/>
+                            </div>
+                        </div>
+                    </div>
+                </aura:iteration>
+                <div style="text-align: center;">
+                </div>
+                <div style="text-align: center;">
+                    <lightning:button class="goToBasket" onclick="{!c.clickGoToBasket}">
+                            {!$Label.c.Go_To_basket}
+                    </lightning:button>
+                </div>
+            </div>
+        </aura:if>
+    </div>
+    <c:AutoParts_ShowToast aura:id="toast"/>
+</aura:component>

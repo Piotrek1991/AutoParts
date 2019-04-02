@@ -1,0 +1,6 @@
+<!--
+ - Created by BRITENET on 26.03.2019.
+ -->
+
+<aura:event type="APPLICATION" description="AutoParts_DeleteBasket">
+</aura:event>
