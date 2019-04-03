@@ -1,0 +1,9 @@
+<!--
+ - Created by BRITENET on 25.03.2019.
+ -->
+
+<aura:event type="APPLICATION" description="AutoParts_AddProductToBasket">
+    <aura:attribute name="productId" type="String"/>
+    <aura:attribute name="productPrice" type="Integer"/>
+    <aura:attribute name="numberOfItem" type="Integer"/>
+</aura:event>

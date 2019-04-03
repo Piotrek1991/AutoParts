@@ -1,0 +1,64 @@
+.THIS .titleLabel {
+    font-size: 150%;
+    color: black;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.THIS.basketPosition {
+    position: absolute;
+    left: 65%;
+    width: 300px;
+    height: 50px;
+    z-index: 99;
+}
+.THIS .hoverBasket:hover{
+     cursor: pointer;
+    color: blue;
+    z-index: 99;
+}
+
+.THIS .slds-media.slds-media_center {
+    width: 200px;
+    position: relative;
+}
+.THIS.basketLabelHover {
+    color: red;
+}
+.THIS .basketLabelHover:hover {
+    color: blue;
+}
+
+.THIS .slds-media__body.slds-m-bottom--x-small {
+    width: 200px;
+}
+.THIS .slds-media__figure {
+    float: left;
+}
+
+.THIS .headerBox {
+    background: #f3f3f3 !important;
+}
+
+.THIS .goToBasket {
+    z-index: 100;
+    border: 1px solid #e5e5e5;
+    display: inline-block;
+    background: #65ba00;
+    border-radius: 4px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #333;
+    font-weight: 700;
+    padding: 4px 4px !important;
+    width: 110px !important;
+    min-height: 48px !important;
+    text-align: center;
+        top: 170px;
+}
+
+.THIS .currencyLabel{
+    font-weight: bold;
+    font-size: 1.1rem;
+    display: inline-block;
+ }
