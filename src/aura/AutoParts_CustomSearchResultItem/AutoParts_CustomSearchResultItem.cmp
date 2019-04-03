@@ -1,0 +1,136 @@
+<aura:component implements="force:hasRecordId" access="global" description="AutoParts_CustomSearchResultItem"
+                controller="AutoParts_CustomSearchController">
+    <aura:attribute name="record" type="Object"/>
+    <aura:attribute name="simpleRecord" type="Product2"/>
+    <aura:attribute name="recordError" type="String"/>
+    <aura:attribute name="productEntryList" type="List"/>
+    <aura:attribute name="oneProductEntry" type="Object"/>
+    <aura:attribute name="standardPrice" type="Integer"/>
+    <aura:attribute name="discountPrice" type="Integer"/>
+    <aura:attribute name="isOpenAddBasketModal" type="Boolean" default="false"/>
+
+    <aura:registerEvent name="AutoParts_ShowDetailsEvent" type="c:AutoParts_ShowDetailsEvent"/>
+    <aura:registerEvent name="AutoParts_AddProductToBasket" type="c:AutoParts_AddProductToBasket"/>
+
+    <aura:handler name="change" value="{!v.simpleRecord}" action="{!c.init}"/>
+
+    <force:recordData aura:id="recordLoader"
+                      recordId="{!v.recordId}"
+                      layoutType="FULL"
+                      fields="Id, Product_Image__c"
+                      targetRecord="{!v.record}"
+                      targetFields="{!v.simpleRecord}"
+                      targetError="{!v.recordError}"/>
+
+    <div class="productBox">
+        <lightning:button variant="base">
+            <aura:if isTrue="{!v.discountPrice == v.standardPrice}">
+                <aura:if isTrue="{!empty(v.simpleRecord.Product_Image__c)}">
+                    <div style="{!empty(v.simpleRecord.Product_Image__c) ? 'background-image:url(' + $Resource.empty_image + ');object-fit: cover; width: 240px; height: 240px;' : 'background-image:url(/servlet/servlet.FileDownload?file=' + v.simpleRecord.Product_Image__c +');object-fit: cover; width: 240px; height: 240px;'}"
+                         class="innerTitle">
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!!empty(v.simpleRecord.Product_Image__c)}">
+                    <img class="innerTitle" src="{!v.simpleRecord.Product_Image__c}" alt="Product image" height="240"
+                         width="240"/>
+                </aura:if>
+            </aura:if>
+            <aura:if isTrue="{!v.discountPrice lt v.standardPrice}">
+                <aura:if isTrue="{!empty(v.simpleRecord.Product_Image__c)}">
+                    <div style="{!empty(v.simpleRecord.Product_Image__c) ? 'background-image:url(' + $Resource.empty_image + ');object-fit: cover; width: 240px; height: 240px;' : 'background-image:url(/servlet/servlet.FileDownload?file=' + v.simpleRecord.Product_Image__c +');object-fit: cover; width: 240px; height: 240px;'}"
+                         class="innerTitle">
+                        <div class="labelDiscount">{!$Label.c.Discount}</div>
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!!empty(v.simpleRecord.Product_Image__c)}">
+                    <img class="innerTitle" src="{!v.simpleRecord.Product_Image__c}" alt="Product image" height="240"
+                         width="240"/>
+                    <div class="labelDiscount" style="bottom: 94%">{!$Label.c.Discount}</div>
+
+                </aura:if>
+            </aura:if>
+        </lightning:button>
+        <p class="slds-text-heading--label nameProduct">{!v.simpleRecord.Name}</p>
+        <p class="slds-text-heading--label priceProduct">
+            <aura:if isTrue="{!v.discountPrice == v.standardPrice}">
+                <div>
+        <p class="standardPriceWithOut">
+            <lightning:formattedNumber value="{!v.standardPrice}"
+                                       style="currency"
+                                       minimumFractionDigits="2"
+                                       maximumFractionDigits="2"/>
+        </p>
+    </div>
+    </aura:if>
+    <aura:if isTrue="{!v.discountPrice lt v.standardPrice}">
+        <div>
+            <s class="standardPrice">
+                <lightning:formattedNumber value="{!v.standardPrice}"
+                                           style="currency"
+                                           minimumFractionDigits="2"
+                                           maximumFractionDigits="2"/>
+            </s>
+        </div>
+    </aura:if>
+    <aura:if isTrue="{!v.discountPrice lt v.standardPrice}">
+        <lightning:formattedNumber value="{!v.discountPrice}"
+                                   style="currency"
+                                   minimumFractionDigits="2"
+                                   maximumFractionDigits="2"/>
+    </aura:if>
+    </p>
+    <div class="slds-m-top--large">
+        <a href="{! $Site.siteUrlPrefix + '/detail/' + v.simpleRecord.Id}" onclick="{!c.clickShowDetails}"
+           class="showDetailsButton">
+                {!$Label.c.Show_Details}
+        </a>
+        <lightning:button class="addBasketButton slds-m-left--medium" value="{!v.recordId}"
+                          onclick="{!c.clickAddToBasket}" title="{!$Label.c.Add_to_Cart}">{!$Label.c.Add_to_Cart}
+        </lightning:button>
+    </div>
+    </div>
+    <aura:if isTrue="{!v.isOpenAddBasketModal}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                 aria-describedby="modal-content" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header mainLabel">
+                    <h1>{!$Label.c.You_successful_added_products_to_basket}</h1>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <div style="font-size: 110%;font-weight: bold;">
+                        <div class="slds-grid">
+                            <div class="slds-col slds-size_2-of-4">
+                                    {!v.oneProductEntry.Product2.Name}
+                            </div>
+                            <div style="text-align: left;" class="slds-col slds-size_1-of-4">
+                                x 1
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="slds-modal__footer">
+                    <div class="slds-grid">
+                        <div class="slds-col continueShoppingLabel" style="text-align: left">
+                            <a style="color: green;" href=""
+                               onclick="{!c.clickCloseBasketModal}">{!$Label.c.Continue_Shopping}</a>
+                        </div>
+                        <div class="slds-col" style="text-align: right">
+                            <lightning:button class="goToBasket" onclick="{!c.clickGoToBasket}">
+                                {!$Label.c.Go_To_Basket}
+                            </lightning:button>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    <aura:if isTrue="{!not(empty(v.recordError))}">
+        <div class="recordError">
+            <ui:message title="Error" severity="error" closable="true">
+                    {!v.recordError}
+            </ui:message>
+        </div>
+    </aura:if>
+    <c:AutoParts_ShowToast aura:id="toast"/>
+</aura:component>
