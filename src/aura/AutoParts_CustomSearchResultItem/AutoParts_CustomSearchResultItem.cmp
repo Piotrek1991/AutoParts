@@ -1,8 +1,6 @@
 <aura:component implements="force:hasRecordId" access="global" description="AutoParts_CustomSearchResultItem"
                 controller="AutoParts_CustomSearchController">
-    <aura:attribute name="record" type="Object"/>
     <aura:attribute name="simpleRecord" type="Product2"/>
-    <aura:attribute name="recordError" type="String"/>
     <aura:attribute name="productEntryList" type="List"/>
     <aura:attribute name="oneProductEntry" type="Object"/>
     <aura:attribute name="standardPrice" type="Integer"/>
@@ -18,9 +16,8 @@
                       recordId="{!v.recordId}"
                       layoutType="FULL"
                       fields="Id, Product_Image__c"
-                      targetRecord="{!v.record}"
                       targetFields="{!v.simpleRecord}"
-                      targetError="{!v.recordError}"/>
+    />
 
     <div class="productBox">
         <lightning:button variant="base">
