@@ -1,0 +1,68 @@
+<!--
+ - Created by BRITENET on 19.03.2019.
+ -->
+
+<aura:component implements="forceCommunity:availableForAllPageTypes, force:hasRecordId" access="global"
+                controller="AutoParts_CustomSearchController"
+                description="AutoParts_ProductDetail">
+    <aura:attribute name="productId" type="String"/>
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="productURL" type="String[]"/>
+    <aura:attribute name="record" type="Object"/>
+    <aura:attribute name="simpleRecord" type="Object"/>
+    <aura:attribute name="recordError" type="String"/>
+    <aura:attribute name="productEntry" type="Object"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <force:recordData aura:id="recordLoader"
+                      recordId="{!v.recordId}"
+                      layoutType="FULL"
+                      targetRecord="{!v.record}"
+                      targetFields="{!v.simpleRecord}"
+                      targetError="{!v.recordError}"
+                      />
+
+    <div class="slds-m-around--medium nameProduct">
+        {!v.simpleRecord.Name}
+    </div>
+    <div class="slds-grid slds-wrap slds-m-bottom--large">
+        <div class="slds-col slds-size_6-of-12">
+            <div class="title">
+                <lightning:carousel class="imageView noContent" disableAutoScroll="false">
+                    <aura:iteration items="{!v.productURL}" var="oneURL">
+                        <lightning:carouselImage src="{!oneURL}"
+                                                 alternativeText="{!$Label.c.This_is_a_card}">
+                        </lightning:carouselImage>
+                    </aura:iteration>
+                </lightning:carousel>
+            </div>
+        </div>
+        <div class="slds-col slds-size_6-of-12">
+            <article class="slds-tile">
+                <div class="slds-tile__detail">
+                    <dl class="slds-list_horizontal slds-wrap">
+                        <dt class="slds-item_label slds-text-color_weak smallLabel"
+                            title="{!$Label.c.Product_code}">
+                            {!$Label.c.Product_code}:
+                        </dt>
+                        <dd class="slds-item_detail textDisplay"
+                            title="{!v.simpleRecord.ProductCode}">
+                            {!v.simpleRecord.ProductCode}
+                        </dd>
+                    </dl>
+                </div>
+            </article>
+        </div>
+    </div>
+    <div class="slds-m-top--medium">
+        <lightning:tabset selectedTabId="productDetails">
+            <lightning:tab label="{!$Label.c.Description}" id="productDetails">
+                    {!v.simpleRecord.Description}
+            </lightning:tab>
+            <lightning:tab label="{!$Label.c.Review}" id="productReviews">
+                    {!$Label.c.Review}
+            </lightning:tab>
+        </lightning:tabset>
+    </div>
+    <c:AutoParts_ShowToast aura:id="toast"/>
+</aura:component>

@@ -16,6 +16,7 @@
                     <div class="slds-grid">
                         <div class="slds-col slds-size_2-of-6">
                             <div class="slds-m-right--large">
+
                             {!$Label.c.Purchase_s_number}: {!v.oneOrder.OrderNumber}
                             </div>
                         </div>
@@ -25,6 +26,17 @@
                         <div class="slds-col slds-size_2-of-6">
                             <div style="text-align: right;" class="slds-m-right--large">
                             {!$Label.c.Status}: {!v.oneOrder.Status}
+
+                                Purchase's number: {!v.oneOrder.OrderNumber}
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size_2-of-6">
+                            Date of purchase: {!v.oneOrder.EffectiveDate}
+                        </div>
+                        <div class="slds-col slds-size_2-of-6">
+                            <div style="text-align: right;" class="slds-m-right--large">
+                                Status: {!v.oneOrder.Status}
+
                             </div>
                         </div>
                     </div>
@@ -38,7 +50,11 @@
                                 </a>
                             </div>
                             <div class="slds-col slds-size_1-of-6">
+
                             {!oneOrderItem.Quantity} {!$Label.c.item}
+
+                            {!oneOrderItem.Quantity} item
+
                             </div>
                             <div class="slds-col slds-size_1-of-6">
                                 <lightning:formattedNumber value="{!oneOrderItem.UnitPrice}"
@@ -47,6 +63,7 @@
                                                            maximumFractionDigits="2"/>
                             </div>
                         </div>
+
                     </div>
                 </aura:iteration>
                 <div class="orderSummaryFont slds-m-around--medium">
@@ -66,4 +83,6 @@
         </ul>
     </div>
     <c:AutoParts_ShowToast aura:id="toast"/>
+        </ul>
+    </div>
 </aura:component>

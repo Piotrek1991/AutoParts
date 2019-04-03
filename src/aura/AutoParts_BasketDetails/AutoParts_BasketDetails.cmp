@@ -1,0 +1,121 @@
+<!--
+ - Created by BRITENET on 24.03.2019.
+ -->
+
+<aura:component description="AutoParts_BasketDetails" implements="forceCommunity:availableForAllPageTypes"
+                access="global" controller="AutoParts_BasketDetail">
+    <aura:attribute name="totalItemInBasket" type="Integer"/>
+    <aura:attribute name="orderItemList" type="List"/>
+    <aura:attribute name="newOrder" type="List"/>
+    <aura:attribute name="totalAmount" type="Integer"/>
+    <aura:attribute name="currentItemId" type="String"/>
+
+    <aura:registerEvent name="AutoParts_DeleteBasket" type="c:AutoParts_DeleteBasket"/>
+    <aura:registerEvent name="AutoParts_AddProductToBasket" type="c:AutoParts_AddProductToBasket"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler event="c:AutoParts_AddProductToBasket" action="{!c.handleAddToBasket}"/>
+    <aura:handler event="c:AutoParts_RefreshBasketDetails" action="{!c.refreshBasketDetails}"/>
+
+    <aura:if isTrue="{!empty(v.orderItemList)}">
+        <div class="slds-m-around--medium" style="text-align: center;">
+            <div class="slds-m-bottom--large emptyBasket">
+                {!$Label.c.Your_basket_is_currently_empty}
+            </div>
+            <a href="{!$Site.siteUrlPrefix}" class="startShopping slds-m-top--large">
+                {!$Label.c.Start_shopping}
+            </a>
+        </div>
+    </aura:if>
+    <aura:if isTrue="{!!empty(v.orderItemList)}">
+        <div class="slds-m-bottom--large bigLabel">{!$Label.c.List_of_products_in_the_basket}</div>
+        <div style="text-align: center;">
+            <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout">
+                <thead>
+                <tr class="slds-text-heading_label">
+                    <th class="col1" scope="col">
+                        <div class="slds-truncate" title="{!$Label.c.Name}">{!$Label.c.Name}</div>
+                    </th>
+                    <th class="col1" scope="col">
+                        <div class="slds-truncate" title="{!$Label.c.Price}">{!$Label.c.Price}</div>
+                    </th>
+                    <th class="col1" scope="col">
+                        <div class="slds-truncate" title="{!$Label.c.Quantity}">{!$Label.c.Quantity}</div>
+                    </th>
+                    <th class="col1" scope="col">
+                        <div class="slds-truncate" title="{!$Label.c.Recount}">{!$Label.c.Recount}</div>
+                    </th>
+                    <th class="col1" scope="col">
+                        <div class="slds-truncate" title="{!$Label.c.Total_Price}">{!$Label.c.Total_Price}</div>
+                    </th>
+                    <th class="col1" scope="col">
+                        <div class="slds-truncate" title="{!$Label.c.Delete}">{!$Label.c.Delete}</div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <aura:iteration items="{!v.orderItemList}" var="oneOrder" indexVar="ind">
+                    <tr class="slds-hint-parent">
+                        <td class="centerColumn">
+                            <div class="slds-truncate">
+                                <a href="{! $Site.siteUrlPrefix + '/detail/' + oneOrder.Product2Id}">
+                                        {!oneOrder.Product2.Name}
+                                </a>
+                            </div>
+                        </td>
+                        <td class="centerColumn">
+                            <div class="slds-truncate">{!oneOrder.UnitPrice}</div>
+                        </td>
+                        <td class="centerColumn">
+                            <lightning:button class="buttonDown" onclick="{!c.clickButtonDown}" value="{!oneOrder.Id}">
+                                -
+                            </lightning:button>
+                            <div class="buttonNumber slds-m-top--medium" onmouseover="{!c.clickButtonInput}"
+                                 data-id="{!oneOrder.Id}" id="{!oneOrder.Id}">
+                                <lightning:input label="" variant="label-hidden" onchange="{!c.changeButtonInput}"
+                                                 disabled="true"
+                                                 type="number" min="0" max="100"
+                                                 aura:id="inputQuantity"
+                                                 class="buttonNumber1"
+                                                 value="{!oneOrder.Quantity}"
+                                />
+                            </div>
+                            <lightning:button class="buttonUp" onclick="{!c.clickButtonUp}" value="{!oneOrder.Id}">
+                                +
+                            </lightning:button>
+                        </td>
+                        <td class="centerColumn">
+                            <div onmouseover="{!c.clickButtonInput}" data-id="{!oneOrder.Id}" id="{!oneOrder.Id}">
+                                <lightning:buttonIcon iconName="utility:refresh" variant="border"
+                                                      onclick="{! c.clickRefreshProduct }" alternativeText="Recount"/>
+                            </div>
+                        </td>
+                        <td class="centerColumn">
+                            <div class="slds-truncate">{!oneOrder.TotalPrice}</div>
+                        </td>
+                        <td class="centerColumn">
+                            <lightning:buttonIcon iconName="utility:close" variant="border" value="{!oneOrder.Id}"
+                                                  onclick="{! c.clickDeleteProduct }" alternativeText="Close"/>
+                        </td>
+                    </tr>
+                </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+        <div class="basketSummary">
+            <div class="basketSummaryFont">
+            {!$Label.c.Total}:&nbsp;&nbsp;
+                <lightning:formattedNumber value="{!v.orderItemList[0].Order.TotalAmount}"
+                                           style="currency"
+                                           minimumFractionDigits="2"
+                                           maximumFractionDigits="2"/>
+            </div>
+        </div>
+        <div class="basketSummaryButton">
+            <lightning:button class="basketButton" onclick="{!c.clickCheckout}"
+                              title="{!$Label.c.Checkout}">{!$Label.c.Checkout}
+            </lightning:button>
+        </div>
+    </aura:if>
+    <c:AutoParts_ShowToast aura:id="toast"/>
+</aura:component>

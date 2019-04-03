@@ -4,6 +4,8 @@
 ({
    init: function(component, event, helper) {
        helper.doInit(component);
+       console.log('init');
+       helper.doInit(component, event);
    },
 
 })

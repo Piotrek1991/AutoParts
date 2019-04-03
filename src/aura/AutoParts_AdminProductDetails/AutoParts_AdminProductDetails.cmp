@@ -1,0 +1,76 @@
+<!--
+ - Created by BRITENET on 02.04.2019.
+ -->
+
+<aura:component description="AutoParts_AdminProductDetails"
+                implements="flexipage:availableForAllPageTypes, force:hasRecordId"
+                controller="AutoParts_ProductImage">
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="record" type="Object"/>
+    <aura:attribute name="simpleRecord" type="Product2"/>
+    <aura:attribute name="openAddModal" type="Boolean" default="false"/>
+    <aura:attribute name="productFiles" type="List"/>
+    <aura:attribute name="selectedFile" type="String"/>
+    <aura:attribute name="selectedURL" type="String"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+
+    <force:recordData aura:id="service"
+                      recordId="{!v.recordId}"
+                      fields="Id, Product_Image__c"
+                      targetFields="{!v.simpleRecord}"
+    />
+
+    <lightning:card>
+        <div class="slds-grid">
+            <div class="slds-col slds-size_2-of-4">
+                <aura:if isTrue="{!v.simpleRecord.Product_Image__c == null}">
+                    <div class="titleLabel slds-m-top--large">
+                            {!$Label.c.Product_doesn_t_have_main_image}
+                    </div>
+                </aura:if>
+                <aura:if isTrue="{!v.simpleRecord.Product_Image__c != null}">
+                    <div class="titleLabel slds-m-bottom--large">
+                            {!$Label.c.Current_main_image}
+                    </div>
+                    <img class="innerTitle" src="{!v.simpleRecord.Product_Image__c}"
+                         alt="Product doesn't have main image"
+                         height="400"
+                         width="400"/>
+                </aura:if>
+            </div>
+            <div class="slds-col slds-size_2-of-4">
+                <div class="slds-m-bottom--large titleLabel">
+                        {!$Label.c.Available_product_image}
+                </div>
+                <aura:if isTrue="{!empty(v.productFiles)}">
+                        {!$Label.c.Product_doesn_t_have_related_files_Please_go_to_related_list_and_add_new_files}
+                </aura:if>
+                <aura:if isTrue="{!!empty(v.productFiles)}">
+                    <div style="text-align: center;">
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout">
+                            <tbody>
+                            <aura:iteration items="{!v.productFiles}" var="oneFile" indexVar="ind">
+                                <tr class="slds-hint-parent" onclick="{!c.clickFileCheckbox}"
+                                    id="{!ind}" data-index="{!ind}">
+                                    <aura:if isTrue="{!v.simpleRecord.Product_Image__c !=oneFile}">
+                                        <td class="centerColumn" style="text-align: center;">
+                                            <img src="{!oneFile}" alt="{!$Label.c.Product_image}" height="200"
+                                                 width="200"/>
+                                        </td>
+                                    </aura:if>
+                                </tr>
+                            </aura:iteration>
+                            </tbody>
+                        </table>
+                        <c:AutoParts_ShowToast aura:id="toast"/>
+                        <lightning:button class="slds-m-top--large" variant="brand" onclick="{!c.clickAddMainImage}"
+                                          label="{!$Label.c.Set_Main_Image}"/>
+                    </div>
+                </aura:if>
+            </div>
+        </div>
+    </lightning:card>
+    <c:AutoParts_ShowToast aura:id="toast"/>
+    <c:AutoParts_Spinner aura:id="spinner"/>
+</aura:component>

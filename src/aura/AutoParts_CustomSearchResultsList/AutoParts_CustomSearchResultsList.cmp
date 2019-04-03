@@ -1,0 +1,44 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" controller="AutoParts_CustomSearchController"
+                access="global" description="AutoParts_CustomSearchResultsList">
+    <aura:attribute type="list" name="recordIds"/>
+    <aura:attribute name="currentMinPrice" type="Integer" default="1"/>
+    <aura:attribute name="currentMaxPrice" type="Integer" default="1"/>
+    <aura:attribute name="currentSelectedCheckBoxes" type="List"  default="[]"/>
+    <aura:attribute name="currentSort" type="String"  default="Name ASC"/>
+    <aura:attribute name="currentQuery" type="String"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler event="c:AutoParts_FiltersEvent" action="{!c.handleFiltersEvent}"/>
+
+    <div class="pageTitle">{!$Label.c.Search_Results}</div>
+    <div class="slds-grid slds-gutters slds-m-around--small">
+        <div class="slds-col slds-size_3-of-12">
+            <lightning:select label="{!$Label.c.Sort_By}" aura:id="selectedSortBox" onchange="{!c.clickSortBox}"
+                              name="selectedSortBox">
+                <option value="Name ASC">{!$Label.c.Name}: {!$Label.c.Ascending}</option>
+                <option value="Name DESC">{!$Label.c.Name}: {!$Label.c.Descending}</option>
+                <option value="PriceLow">{!$Label.c.Price}: {!$Label.c.Lowest_first}</option>
+                <option value="PriceHigh">{!$Label.c.Price}: {!$Label.c.Highest_first}</option>
+            </lightning:select>
+        </div>
+    </div>
+    <div class="slds-align_absolute-center">
+        <lightning:layout verticalAlign="center" multipleRows="true">
+            <aura:if isTrue="{!v.recordIds.length == 0 }">
+                <div class="slds-align_absolute-center">
+                    "{!$Label.c.No_products_found}"
+                </div>
+            </aura:if>
+            <aura:if isTrue="{!v.recordIds.length > 0 }">
+                    <aura:iteration items="{!v.recordIds}" var="id">
+                        <lightning:layoutItem class="slds-m-around--small">
+                            <div style="text-align: center;">
+                            <c:AutoParts_CustomSearchResultItem recordId="{!id}"/>
+                            </div>
+                        </lightning:layoutItem>
+                    </aura:iteration>
+            </aura:if>
+        </lightning:layout>
+    </div>
+    <c:AutoParts_ShowToast aura:id="toast"/>
+</aura:component>

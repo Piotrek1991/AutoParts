@@ -1,0 +1,19 @@
+.THIS .col1{
+    background: #f3f3f3 !important;
+    text-align: center;
+}
+
+.THIS .centerColumn{
+    text-align: center;
+}
+
+.THIS .titleLabel{
+    font-size: 200%;
+    font-weight: bold;
+    text-align: center;
+}
+
+.THIS .mainLabel {
+    font-size: 170%;
+    text-align: center;
+}

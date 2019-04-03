@@ -1,0 +1,232 @@
+<!--
+ - Created by BRITENET on 28.03.2019.
+ -->
+
+<aura:component description="AutoParts_PriceBookProducts"
+                implements="flexipage:availableForAllPageTypes,force:hasRecordId"
+                controller="AutoParts_PriceBookProducts">
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="orderItemId" type="String"/>
+    <aura:attribute name="currentOrderItem" type="String"/>
+    <aura:attribute name="isOpenDeleteModal" type="Boolean"/>
+    <aura:attribute name="isOpenEditModal" type="Boolean"/>
+    <aura:attribute name="isOpenAddModal" type="Boolean"/>
+    <aura:attribute name="productList" type="List"/>
+    <aura:attribute name="notRelatedProductList" type="List"/>
+    <aura:attribute type="List" name="selectedCheckBoxes" default="[]"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+    <aura:handler event="c:AutoParts_PriceBookRefreshEvent" action="{!c.init}"/>
+
+    <lightning:card>
+        <aura:if isTrue="{!empty(v.productList)}">
+            <div class="titleLabel" style="text-align: center;">
+                    {!$Label.c.Not_available_products}
+            </div>
+        </aura:if>
+        <aura:if isTrue="{!!empty(v.productList)}">
+            <div class="titleLabel">{!$Label.c.List_of_products}</div>
+            <div style="text-align: center;">
+                <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout">
+                    <thead>
+                    <tr class="slds-text-heading_label">
+                        <th class="col1" style="width: 25%;" scope="col">
+                            <div class="slds-truncate" title="{!$Label.c.Name}">{!$Label.c.Name}</div>
+                        </th>
+                        <th class="col1" scope="col">
+                            <div class="slds-truncate"
+                                 title="{!$Label.c.Standard_Price}">{!$Label.c.Standard_Price}</div>
+                        </th>
+                        <th class="col1" scope="col">
+                            <div class="slds-truncate"
+                                 title="{!$Label.c.Discount_Price}">{!$Label.c.Discount_Price}</div>
+                        </th>
+                        <th class="col1" scope="col">
+                            <div class="slds-truncate"
+                                 title="{!$Label.c.Product_Category}">{!$Label.c.Product_Category}</div>
+                        </th>
+                        <th class="col1" scope="col">
+                            <div class="slds-truncate"
+                                 title="{!$Label.c.Discount_By_Percent}">{!$Label.c.Discount_By_Percent}</div>
+                        </th>
+                        <th class="col1" scope="col">
+                            <div class="slds-truncate"
+                                 title="{!$Label.c.Discount_By_Cash}">{!$Label.c.Discount_By_Cash}</div>
+                        </th>
+                        <th class="col1" scope="col">
+                            <div class="slds-truncate" title=""></div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <aura:iteration items="{!v.productList}" var="oneProduct" indexVar="ind">
+                        <tr class="slds-hint-parent" onmouseover="{!c.setCurrentOrderItemId}"
+                            data-id="{!oneProduct.Id}" id="{!oneProduct.Id}">
+                            <td class="centerColumn">
+                                    {!oneProduct.Product2.Name}
+                            </td>
+                            <td class="centerColumn">
+                                <lightning:formattedNumber value="{!oneProduct.UnitPrice}"
+                                                           style="currency"
+                                                           minimumFractionDigits="2"
+                                                           maximumFractionDigits="2"/>
+                            </td>
+                            <td class="centerColumn">
+                                <lightning:formattedNumber value="{!oneProduct.Discount_Price__c}"
+                                                           style="currency"
+                                                           minimumFractionDigits="2"
+                                                           maximumFractionDigits="2"/>
+                            </td>
+                            <td class="centerColumn">
+                                    {!oneProduct.Product2.Family}
+                            </td>
+                            <td class="centerColumn">
+                            {!oneProduct.Discount_by_percent__c} %
+                            </td>
+                            <td class="centerColumn">
+                                <lightning:formattedNumber value="{!oneProduct.Discount_by_cash__c}"
+                                                           style="currency"
+                                                           minimumFractionDigits="2"
+                                                           maximumFractionDigits="2"/>
+                            </td>
+                            <td class="centerColumn">
+                                <lightning:buttonIcon iconName="utility:edit" alternativeText="edit"
+                                                      onclick="{!c.clickOpenEditProduct}" size="medium"/>
+                                <lightning:buttonIcon iconName="utility:delete" alternativeText="delete"
+                                                      onclick="{!c.clickDeleteProduct}" size="medium"/>
+                            </td>
+                        </tr>
+                    </aura:iteration>
+                    </tbody>
+                </table>
+            </div>
+        </aura:if>
+        <aura:set attribute="actions">
+            <lightning:button variant="brand"
+                              class="slds-m-top--medium"
+                              label="{!$Label.c.Add_Product_To_PriceBook}" onclick="{!c.clickOpenAddModal}"/>
+        </aura:set>
+    </lightning:card>
+    <aura:if isTrue="{!v.isOpenDeleteModal}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                 aria-describedby="modal-content" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header mainLabel">
+                    <h1>{!$Label.c.Delete}&nbsp;{!v.currentOrderItem.Product2.Name}</h1>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" style="text-align: center;"
+                     id="modal-content">
+                    <h1>{!$Label.c.Are_you_sure}</h1>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral"
+                                      label="{!$Label.c.Cancel}"
+                                      title="{!$Label.c.Cancel}"
+                                      onclick="{!c.clickCloseDeleteModal}"/>
+                    <lightning:button variant="neutral" label="{!$Label.c.Delete}" onclick="{!c.clickRemoveProduct}"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+
+    <aura:if isTrue="{!v.isOpenEditModal}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                 aria-describedby="modal-content" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header mainLabel">
+                    <h1>{!$Label.c.Edit_product}&nbsp;{!v.currentOrderItem.Product2.Name}</h1>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content">
+                    <lightning:input label="Percentage" placeholder="Type discount" required="true"
+                                     type="number" min="0" max="100"
+                                     aura:id="percentageDiscount"
+                                     name="expenseName"
+                                     value="{!v.currentOrderItem.Discount_by_percent__c}"
+                    />
+                    <lightning:input label="Amount" placeholder="Type amount" required="true"
+                                     type="number" min="0" max="1000000000"
+                                     aura:id="cashDiscount"
+                                     name="expenseName"
+                                     value="{!v.currentOrderItem.Discount_by_cash__c}"
+                    />
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral"
+                                      label="{!$Label.c.Cancel}"
+                                      title="{!$Label.c.Cancel}"
+                                      onclick="{!c.clickCloseEditModal}"/>
+                    <lightning:button variant="neutral" label="{!$Label.c.Edit}" onclick="{!c.clickEditProduct}"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+
+    <aura:if isTrue="{!v.isOpenAddModal}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                 aria-describedby="modal-content" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container" style="width: 1800px;">
+                <header class="slds-modal__header mainLabel">
+                    <h1>{!$Label.c.Add_products}</h1>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content">
+                    <aura:if isTrue="{!empty(v.notRelatedProductList)}">
+                        <div style="text-align: center;">
+                                {!$Label.c.Not_available_products}
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!!empty(v.notRelatedProductList)}">
+                        <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_fixed-layout">
+                            <thead>
+                            <tr class="slds-text-heading_label">
+                                <th class="col1" style="width: 50%;" scope="col">
+                                    <div class="slds-truncate" title="{!$Label.c.Name}">{!$Label.c.Name}</div>
+                                </th>
+                                <th class="col1" scope="col">
+                                    <div class="slds-truncate"
+                                         title="{!$Label.c.Standard_Price}">{!$Label.c.Standard_Price}</div>
+                                </th>
+                                <th class="col1" scope="col">
+                                    <div class="slds-truncate" title="{!$Label.c.Check}"></div>
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <aura:iteration items="{!v.notRelatedProductList}" var="oneProduct" indexVar="ind">
+                                <tr class="slds-hint-parent" onmouseover="{!c.setCurrentOrderItemId}"
+                                    data-id="{!oneProduct.Id}" id="{!oneProduct.Id}">
+                                    <td class="centerColumn">
+                                            {!oneProduct.Product2.Name}
+                                    </td>
+                                    <td class="centerColumn">
+                                            {!oneProduct.UnitPrice}
+                                    </td>
+                                    <td class="centerColumn">
+                                        <lightning:input label="" aura:id="categoryCheckbox"
+                                                         value="{!oneProduct.Product2Id}" type="checkbox"
+                                                         onchange="{!c.clickProductCheckbox}"/>
+                                    </td>
+                                </tr>
+                            </aura:iteration>
+                            </tbody>
+                        </table>
+                    </aura:if>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral"
+                                      label="{!$Label.c.Cancel}"
+                                      title="{!$Label.c.Cancel}"
+                                      onclick="{!c.clickCloseAddModal}"/>
+                    <aura:if isTrue="{!!empty(v.notRelatedProductList)}">
+                        <lightning:button variant="neutral" label="{!$Label.c.AddLabel}"
+                                          onclick="{!c.clickAddSelectedProducts}"/>
+                    </aura:if>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    <c:AutoParts_Spinner aura:id="spinner"/>
+    <c:AutoParts_ShowToast aura:id="toast"/>
+</aura:component>
