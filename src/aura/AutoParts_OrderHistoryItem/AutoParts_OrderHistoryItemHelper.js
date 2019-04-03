@@ -2,6 +2,8 @@
  * Created by BRITENET on 27.03.2019.
  */
 ({
+    doInit: function(component) {
+
     doInit: function(component, event) {
         console.log("do Init33");
         let getActualOrderItemAction = component.get("c.selectActualOrderItem");
@@ -11,6 +13,21 @@
              if (state === "SUCCESS") {
                 component.set("v.orderItemList", response.getReturnValue());
              } else {
+                 this.doShowToast(component, response.getErrors()[0].message, 'Error' , 'Error');
+                 console.log("Select Actual Order Item Failed with state: " + state);
+             }
+        });
+        $A.enqueueAction(getActualOrderItemAction);
+    },
+
+    doShowToast: function(component, message, title, typeToast) {
+        const toastComponent = component.find('toast');
+        if (toastComponent) {
+            toastComponent.showToast(message, title, typeToast);
+        }
+        else {
+            console.error("'Toast Component' does not exist");
+        }
                  console.log("Add Product To Basket Failed with state: " + state);
              }
         });
