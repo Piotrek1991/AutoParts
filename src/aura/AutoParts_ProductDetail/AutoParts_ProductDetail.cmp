@@ -6,8 +6,8 @@
                 controller="AutoParts_CustomSearchController"
                 description="AutoParts_ProductDetail">
     <aura:attribute name="productId" type="String"/>
+    <aura:attribute name="recordId" type="String"/>
     <aura:attribute name="productURL" type="String[]"/>
-    <aura:attribute name="queryA" type="String"/>
     <aura:attribute name="record" type="Object"/>
     <aura:attribute name="simpleRecord" type="Object"/>
     <aura:attribute name="recordError" type="String"/>
@@ -20,7 +20,8 @@
                       targetRecord="{!v.record}"
                       targetFields="{!v.simpleRecord}"
                       targetError="{!v.recordError}"
-                      recordUpdated="{!c.handleRecordUpdated}"/>
+                      />
+
     <div class="slds-m-around--medium nameProduct">
         {!v.simpleRecord.Name}
     </div>
@@ -30,7 +31,7 @@
                 <lightning:carousel class="imageView noContent" disableAutoScroll="false">
                     <aura:iteration items="{!v.productURL}" var="oneURL">
                         <lightning:carouselImage src="{!oneURL}"
-                                                 alternativeText="This is a card">
+                                                 alternativeText="{!$Label.c.This_is_a_card}">
                         </lightning:carouselImage>
                     </aura:iteration>
                 </lightning:carousel>
@@ -41,8 +42,8 @@
                 <div class="slds-tile__detail">
                     <dl class="slds-list_horizontal slds-wrap">
                         <dt class="slds-item_label slds-text-color_weak smallLabel"
-                            title="Product code">
-                            Product code:
+                            title="{!$Label.c.Product_code}">
+                            {!$Label.c.Product_code}:
                         </dt>
                         <dd class="slds-item_detail textDisplay"
                             title="{!v.simpleRecord.ProductCode}">
@@ -55,12 +56,13 @@
     </div>
     <div class="slds-m-top--medium">
         <lightning:tabset selectedTabId="productDetails">
-            <lightning:tab label="Description" id="productDetails">
+            <lightning:tab label="{!$Label.c.Description}" id="productDetails">
                     {!v.simpleRecord.Description}
             </lightning:tab>
-            <lightning:tab label="Reviews" id="productReviews">
-                Reviews
+            <lightning:tab label="{!$Label.c.Review}" id="productReviews">
+                    {!$Label.c.Review}
             </lightning:tab>
         </lightning:tabset>
     </div>
+    <c:AutoParts_ShowToast aura:id="toast"/>
 </aura:component>
